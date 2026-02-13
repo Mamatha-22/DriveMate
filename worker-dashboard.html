@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Dashboard - DriveMate</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body id="worker-dashboard">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">Drive<span>Mate</span></a>
+            <nav class="nav-links">
+                <a href="#" onclick="logout('worker'); return false;" class="logout-btn" data-user-type="worker">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <section class="dashboard">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1>Worker Dashboard</h1>
+                <div class="user-info">
+                    <img src="" alt="User" class="user-avatar" id="user-avatar">
+                    <span class="user-name" id="user-name">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Alert Container -->
+            <div id="dashboard-message"></div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="profile" onclick="switchTab('profile')">My Profile</button>
+                <button class="tab" data-tab="available-work" onclick="switchTab('available-work')">Available Work</button>
+                <button class="tab" data-tab="applied-work" onclick="switchTab('applied-work')">Applied Work</button>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="tab-content active">
+                <div id="worker-profile">
+                    <!-- Profile will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Available Work Tab -->
+            <div id="available-work-tab" class="tab-content">
+                <div class="search-filter">
+                    <input type="text" id="work-search" placeholder="Search work by location or description...">
+                    <select id="work-type-filter">
+                        <option value="">All Types</option>
+                        <option value="driver">Driver</option>
+                        <option value="helper">Helper</option>
+                        <option value="loader">Loader</option>
+                    </select>
+                </div>
+                <div id="available-work-list" class="cards-grid">
+                    <!-- Available work will be rendered here -->
+                </div>
+                <div id="work-list-message"></div>
+            </div>
+
+            <!-- Applied Work Tab -->
+            <div id="applied-work-tab" class="tab-content">
+                <h3 style="margin-bottom: 20px; color: var(--primary-color);">My Applications</h3>
+                <div id="applied-work-list" class="cards-grid">
+                    <!-- Applied work will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verification Info Modal -->
+    <div id="verification-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Verification Status</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="verification-banner unverified">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <div>
+                        <h4>Verification Pending</h4>
+                        <p>Your profile is not yet verified. Verification helps owners trust you more.</p>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4>How to get verified:</h4>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 10px;">Add a clear profile photo</li>
+                        <li style="margin-bottom: 10px;">Use your real phone number</li>
+                        <li style="margin-bottom: 10px;">Complete your profile with accurate information</li>
+                        <li>Verification is manual and may take 24-48 hours</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="hideModal('verification-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

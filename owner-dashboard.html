@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard - DriveMate</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body id="owner-dashboard">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">Drive<span>Mate</span></a>
+            <nav class="nav-links">
+                <a href="#" onclick="logout('owner'); return false;" class="logout-btn" data-user-type="owner">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <section class="dashboard">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1>Owner Dashboard</h1>
+                <div class="user-info">
+                    <img src="" alt="User" class="user-avatar" id="user-avatar">
+                    <span class="user-name" id="user-name">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Alert Container -->
+            <div id="dashboard-message"></div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="my-work" onclick="switchTab('my-work')">My Work Postings</button>
+                <button class="tab" data-tab="find-workers" onclick="switchTab('find-workers')">Find Workers</button>
+            </div>
+
+            <!-- My Work Postings Tab -->
+            <div id="my-work-tab" class="tab-content active">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="showModal('post-work-modal')">+ Post New Work</button>
+                </div>
+                <div id="work-postings-list" class="cards-grid">
+                    <!-- Work postings will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Find Workers Tab -->
+            <div id="find-workers-tab" class="tab-content">
+                <div class="search-filter">
+                    <input type="text" id="worker-search" placeholder="Search workers by name or location...">
+                    <select id="worker-type-filter">
+                        <option value="">All Types</option>
+                        <option value="driver">Driver</option>
+                        <option value="helper">Helper</option>
+                        <option value="loader">Loader</option>
+                    </select>
+                </div>
+                <div id="available-workers-list" class="cards-grid">
+                    <!-- Available workers will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Post Work Modal -->
+    <div id="post-work-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Post New Work</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="post-work-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="vehicleType">Vehicle Type</label>
+                        <select id="vehicleType" name="vehicleType" required>
+                            <option value="">Select vehicle type</option>
+                            <option value="bus">Bus</option>
+                            <option value="lorry">Lorry</option>
+                            <option value="tempo">Tempo</option>
+                            <option value="van">Van</option>
+                            <option value="truck">Truck</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workerType">Worker Needed</label>
+                        <select id="workerType" name="workerType" required>
+                            <option value="">Select worker type</option>
+                            <option value="driver">Driver</option>
+                            <option value="helper">Helper</option>
+                            <option value="loader">Loader</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="workLocation">Location</label>
+                            <input type="text" id="workLocation" name="workLocation" placeholder="City/Area" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="workDuration">Duration</label>
+                            <select id="workDuration" name="workDuration" required>
+                                <option value="">Select duration</option>
+                                <option value="Full Time">Full Time</option>
+                                <option value="Part Time">Part Time</option>
+                                <option value="Temporary">Temporary</option>
+                                <option value="Project Basis">Project Basis</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="workDescription">Job Description</label>
+                        <textarea id="workDescription" name="workDescription" rows="4" placeholder="Describe the job requirements..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="hideModal('post-work-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Post Work</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Applicants Modal -->
+    <div id="applicants-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Job Applicants</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="applicants-list">
+                <!-- Applicants will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
