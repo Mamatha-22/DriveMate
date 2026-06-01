@@ -37,6 +37,12 @@ const ownerSchema = new mongoose.Schema({
         select: false // Don't include password in queries by default
     },
     
+    // Phone verification status (OTP-based)
+    isPhoneVerified: {
+        type: Boolean,
+        default: false
+    },
+    
     // City where owner operates
     city: {
         type: String,
@@ -97,33 +103,28 @@ const ownerSchema = new mongoose.Schema({
         default: 0
     },
     
-    // Timestamps for tracking creation and updates
-    createdAt: {
+    // Soft delete field
+    deletedAt: {
         type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
+        default: null
     }
+}, {
+    timestamps: true
 });
 
 // ============================================
-// MIDDLEWARE (Pre-save hook)
+// MIDDLEWARE (Hooks)
 // ============================================
 
-// Update the updatedAt field before saving
-ownerSchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
+// Query middleware to exclude soft-deleted records
+ownerSchema.pre(/^find/, function(next) {
+    this.find({ deletedAt: null });
     next();
 });
 
 // ============================================
 // INDEXES (For faster queries)
 // ============================================
-
-// Index on phone for login lookups
-ownerSchema.index({ phone: 1 });
 
 // Index on city for location-based searches
 ownerSchema.index({ city: 1 });

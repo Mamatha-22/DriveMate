@@ -32,12 +32,31 @@
                         <label for="ownerPhone">Phone Number</label>
                         <input type="tel" id="ownerPhone" name="ownerPhone" placeholder="Enter your phone number" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full">Login</button>
+                    <button type="submit" class="btn btn-primary btn-full" id="login-btn">Login</button>
                 </form>
                 
                 <div class="auth-links">
                     <p>New owner? <a href="#" onclick="showRegister()">Register here</a></p>
                     <p style="margin-top: 10px;"><a href="index.html">Back to Home</a></p>
+                </div>
+            </div>
+            
+            <!-- Login OTP Section -->
+            <div id="login-otp-section" style="display: none;">
+                <h2>Verify OTP</h2>
+                <p class="subtitle">Enter the 6-digit OTP sent to your phone</p>
+                
+                <form id="owner-login-otp-form">
+                    <div class="form-group">
+                        <label for="ownerLoginOTP">Enter OTP</label>
+                        <input type="tel" id="ownerLoginOTP" name="ownerLoginOTP" placeholder="6-digit OTP" maxlength="6" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" id="verify-login-btn">Verify & Login</button>
+                    <button type="button" class="btn btn-outline btn-full" id="resend-login-btn" style="margin-top: 10px;">Resend OTP</button>
+                </form>
+                
+                <div class="auth-links">
+                    <p><a href="#" onclick="showLogin()">Change phone number</a></p>
                 </div>
             </div>
             
@@ -65,7 +84,7 @@
                         <label for="ownerPhoto">Profile Photo (Optional)</label>
                         <input type="file" id="ownerPhoto" name="ownerPhoto" accept="image/*">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full">Register</button>
+                    <button type="submit" class="btn btn-primary btn-full" id="register-btn">Register</button>
                 </form>
                 
                 <div class="auth-links">
@@ -74,22 +93,82 @@
                 </div>
             </div>
             
+            <!-- Register OTP Section -->
+            <div id="register-otp-section" style="display: none;">
+                <h2>Verify OTP</h2>
+                <p class="subtitle">Enter the 6-digit OTP sent to your phone</p>
+                
+                <form id="owner-register-otp-form">
+                    <div class="form-group">
+                        <label for="ownerRegisterOTP">Enter OTP</label>
+                        <input type="tel" id="ownerRegisterOTP" name="ownerRegisterOTP" placeholder="6-digit OTP" maxlength="6" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" id="verify-register-btn">Verify & Register</button>
+                    <button type="button" class="btn btn-outline btn-full" id="resend-register-btn" style="margin-top: 10px;">Resend OTP</button>
+                </form>
+                
+                <div class="auth-links">
+                    <p><a href="#" onclick="showRegister()">Change details</a></p>
+                </div>
+            </div>
+            
             <!-- Alert Container -->
             <div id="auth-message" style="margin-top: 20px;"></div>
         </div>
     </section>
 
-    <script src="js/main.js"></script>
+    <script src="js/api-main.js"></script>
     <script>
         function showRegister() {
             document.getElementById('login-section').style.display = 'none';
+            document.getElementById('login-otp-section').style.display = 'none';
             document.getElementById('register-section').style.display = 'block';
+            document.getElementById('register-otp-section').style.display = 'none';
         }
         
         function showLogin() {
-            document.getElementById('register-section').style.display = 'none';
             document.getElementById('login-section').style.display = 'block';
+            document.getElementById('login-otp-section').style.display = 'none';
+            document.getElementById('register-section').style.display = 'none';
+            document.getElementById('register-otp-section').style.display = 'none';
         }
+        
+        function showLoginOTP() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('login-otp-section').style.display = 'block';
+        }
+        
+        function showRegisterOTP() {
+            document.getElementById('register-section').style.display = 'none';
+            document.getElementById('register-otp-section').style.display = 'block';
+        }
+        
+        // Add event listeners for OTP forms
+        document.addEventListener('DOMContentLoaded', function() {
+            // Owner login OTP form
+            const loginOtpForm = document.getElementById('owner-login-otp-form');
+            if (loginOtpForm) {
+                loginOtpForm.addEventListener('submit', verifyOwnerLoginOTP);
+            }
+            
+            // Owner login resend button
+            const resendLoginBtn = document.getElementById('resend-login-btn');
+            if (resendLoginBtn) {
+                resendLoginBtn.addEventListener('click', resendOwnerLoginOTP);
+            }
+            
+            // Owner register OTP form
+            const registerOtpForm = document.getElementById('owner-register-otp-form');
+            if (registerOtpForm) {
+                registerOtpForm.addEventListener('submit', verifyOwnerRegisterOTP);
+            }
+            
+            // Owner register resend button
+            const resendRegisterBtn = document.getElementById('resend-register-btn');
+            if (resendRegisterBtn) {
+                resendRegisterBtn.addEventListener('click', resendOwnerRegisterOTP);
+            }
+        });
     </script>
 </body>
 </html>

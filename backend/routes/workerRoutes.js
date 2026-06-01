@@ -11,7 +11,8 @@ const bcrypt = require('bcryptjs');
 const Worker = require('../models/Worker');
 const Review = require('../models/Review');
 
-// Import middleware
+// Import middleware and services
+const authService = require('../services/authService');
 const { auth, generateToken } = require('../middleware/auth');
 const { sendSuccess, sendError, sendValidationError, sendNotFoundError, asyncHandler } = require('../middleware/errorHandler');
 
@@ -118,13 +119,14 @@ router.post('/register', asyncHandler(async (req, res) => {
     // Save to database
     await worker.save();
 
-    // Generate JWT token
-    const token = generateToken(worker);
+    // Generate tokens using authService
+    const { accessToken, refreshToken } = await authService.loginUser(worker, 'Worker');
 
     // Send success response
     sendSuccess(res, 201, 'Worker registered successfully', {
         worker: worker.getPublicProfile(),
-        token: token
+        token: accessToken,
+        refreshToken: refreshToken
     });
 }));
 
@@ -166,13 +168,14 @@ router.post('/login', asyncHandler(async (req, res) => {
         return sendError(res, 401, 'Invalid credentials', 'Incorrect password');
     }
 
-    // Generate JWT token
-    const token = generateToken(worker);
+    // Generate tokens using authService
+    const { accessToken, refreshToken } = await authService.loginUser(worker, 'Worker');
 
     // Send success response
     sendSuccess(res, 200, 'Login successful', {
         worker: worker.getPublicProfile(),
-        token: token
+        token: accessToken,
+        refreshToken: refreshToken
     });
 }));
 

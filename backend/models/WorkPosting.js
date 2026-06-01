@@ -143,24 +143,22 @@ const workPostingSchema = new mongoose.Schema({
         default: null
     },
     
-    // Timestamps
-    createdAt: {
+    // Soft delete field
+    deletedAt: {
         type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
+        default: null
     }
+}, {
+    timestamps: true
 });
 
 // ============================================
-// MIDDLEWARE
+// MIDDLEWARE (Hooks)
 // ============================================
 
-// Update the updatedAt field before saving
-workPostingSchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
+// Query middleware to exclude soft-deleted records
+workPostingSchema.pre(/^find/, function(next) {
+    this.find({ deletedAt: null });
     next();
 });
 

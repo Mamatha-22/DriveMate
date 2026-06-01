@@ -37,6 +37,12 @@ const workerSchema = new mongoose.Schema({
         select: false // Don't include password in queries by default
     },
     
+    // Phone verification status (OTP-based)
+    isPhoneVerified: {
+        type: Boolean,
+        default: false
+    },
+    
     // Type of work the worker does
     workType: {
         type: String,
@@ -115,33 +121,28 @@ const workerSchema = new mongoose.Schema({
         default: 0
     },
     
-    // Timestamps for tracking
-    createdAt: {
+    // Soft delete field
+    deletedAt: {
         type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
+        default: null
     }
+}, {
+    timestamps: true // Automatically manage createdAt and updatedAt
 });
 
 // ============================================
-// MIDDLEWARE (Pre-save hook)
+// MIDDLEWARE (Hooks)
 // ============================================
 
-// Update the updatedAt field before saving
-workerSchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
+// Query middleware to exclude soft-deleted records by default
+workerSchema.pre(/^find/, function(next) {
+    this.find({ deletedAt: null });
     next();
 });
 
 // ============================================
 // INDEXES (For faster queries)
 // ============================================
-
-// Index on phone for login lookups
-workerSchema.index({ phone: 1 });
 
 // Index on workType for filtering workers
 workerSchema.index({ workType: 1 });

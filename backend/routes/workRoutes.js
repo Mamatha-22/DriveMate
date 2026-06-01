@@ -14,6 +14,7 @@ const Owner = require('../models/Owner');
 // Import middleware
 const { auth, requireRole } = require('../middleware/auth');
 const { sendSuccess, sendError, sendValidationError, sendNotFoundError, asyncHandler } = require('../middleware/errorHandler');
+const { cacheMiddleware } = require('../utils/cache');
 
 // ============================================
 // HELPER FUNCTIONS
@@ -116,7 +117,7 @@ router.get('/', asyncHandler(async (req, res) => {
  * Get recent work postings (for homepage)
  * Query params: ?limit=10
  */
-router.get('/recent', asyncHandler(async (req, res) => {
+router.get('/recent', cacheMiddleware(300), asyncHandler(async (req, res) => {
     const { limit = 10 } = req.query;
     
     const postings = await WorkPosting.findRecent(parseInt(limit));
@@ -667,7 +668,9 @@ router.delete('/:id', auth, requireRole(['owner']), asyncHandler(async (req, res
         return sendError(res, 400, 'Cannot delete', 'Cannot delete posting with accepted applicants. Please close it instead.');
     }
 
-    await WorkPosting.findByIdAndDelete(req.params.id);
+    // Use soft delete by setting deletedAt
+    posting.deletedAt = new Date();
+    await posting.save();
 
     sendSuccess(res, 200, 'Work posting deleted successfully');
 }));

@@ -8,8 +8,9 @@
 // Import JWT library for token operations
 const jwt = require('jsonwebtoken');
 
-// JWT secret key - In production, use environment variable
+// JWT secrets
 const JWT_SECRET = process.env.JWT_SECRET || 'drivemate_jwt_secret_key_2024';
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'drivemate_refresh_secret_key_2024';
 
 /**
  * Verify JWT Token Middleware
@@ -83,14 +84,9 @@ const auth = async (req, res, next) => {
 };
 
 /**
- * Generate JWT Token
- * 
- * Helper function to generate a JWT token for a user.
- * @param {Object} user - User object containing id, role, and other data
- * @returns {string} JWT token
+ * Generate Access Token
  */
 const generateToken = (user) => {
-    // Create token payload
     const payload = {
         id: user._id || user.id,
         role: user.role,
@@ -98,8 +94,34 @@ const generateToken = (user) => {
         name: user.name
     };
 
-    // Sign and return token (expires in 7 days)
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+    return jwt.sign(payload, JWT_SECRET, { 
+        expiresIn: process.env.JWT_EXPIRES_IN || '1d' 
+    });
+};
+
+/**
+ * Generate Refresh Token
+ */
+const generateRefreshToken = (user) => {
+    const payload = {
+        id: user._id || user.id,
+        role: user.role
+    };
+
+    return jwt.sign(payload, REFRESH_TOKEN_SECRET, { 
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d' 
+    });
+};
+
+/**
+ * Verify Refresh Token
+ */
+const verifyRefreshToken = (token) => {
+    try {
+        return jwt.verify(token, REFRESH_TOKEN_SECRET);
+    } catch (error) {
+        return null;
+    }
 };
 
 /**
@@ -161,6 +183,8 @@ const requireRole = (allowedRoles) => {
 module.exports = {
     auth,
     generateToken,
+    generateRefreshToken,
+    verifyRefreshToken,
     optionalAuth,
     requireRole,
     JWT_SECRET

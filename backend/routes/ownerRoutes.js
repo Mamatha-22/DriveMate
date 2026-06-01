@@ -11,7 +11,8 @@ const bcrypt = require('bcryptjs');
 const Owner = require('../models/Owner');
 const Review = require('../models/Review');
 
-// Import middleware
+// Import middleware and services
+const authService = require('../services/authService');
 const { auth, generateToken, requireRole } = require('../middleware/auth');
 const { sendSuccess, sendError, sendValidationError, sendNotFoundError, asyncHandler } = require('../middleware/errorHandler');
 
@@ -100,13 +101,14 @@ router.post('/register', asyncHandler(async (req, res) => {
     // Save to database
     await owner.save();
 
-    // Generate JWT token
-    const token = generateToken(owner);
+    // Generate tokens using authService
+    const { accessToken, refreshToken } = await authService.loginUser(owner, 'Owner');
 
     // Send success response
     sendSuccess(res, 201, 'Owner registered successfully', {
         owner: owner.getPublicProfile(),
-        token: token
+        token: accessToken,
+        refreshToken: refreshToken
     });
 }));
 
@@ -148,13 +150,14 @@ router.post('/login', asyncHandler(async (req, res) => {
         return sendError(res, 401, 'Invalid credentials', 'Incorrect password');
     }
 
-    // Generate JWT token
-    const token = generateToken(owner);
+    // Generate tokens using authService
+    const { accessToken, refreshToken } = await authService.loginUser(owner, 'Owner');
 
     // Send success response
     sendSuccess(res, 200, 'Login successful', {
         owner: owner.getPublicProfile(),
-        token: token
+        token: accessToken,
+        refreshToken: refreshToken
     });
 }));
 
